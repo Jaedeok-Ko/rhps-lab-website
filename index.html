@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Laboratory — Research Group</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #0d1b2a;
+      --navy-mid: #1a2e45;
+      --gold: #b8972a;
+      --gold-light: #d4ae4a;
+      --cream: #f5f2eb;
+      --cream-dark: #e8e3d9;
+      --text: #1c1c1c;
+      --text-soft: #4a4a4a;
+      --text-muted: #7a7a7a;
+      --rule: rgba(184,151,42,0.35);
+      --serif: 'EB Garamond', Georgia, serif;
+      --sans: 'Source Sans 3', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--cream);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 17px;
+      line-height: 1.7;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: var(--navy);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 48px;
+      height: 64px;
+      border-bottom: 2px solid var(--gold);
+    }
+    .nav-logo {
+      font-family: var(--serif);
+      font-size: 1.15rem;
+      color: var(--cream);
+      letter-spacing: 0.04em;
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--gold-light); }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a {
+      font-family: var(--sans);
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--cream-dark);
+      text-decoration: none;
+      opacity: 0.8;
+      transition: opacity 0.2s, color 0.2s;
+    }
+    .nav-links a:hover { opacity: 1; color: var(--gold-light); }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      background: var(--navy);
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 120px 80px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    #hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        repeating-linear-gradient(0deg, transparent, transparent 59px, rgba(184,151,42,0.07) 60px),
+        repeating-linear-gradient(90deg, transparent, transparent 59px, rgba(184,151,42,0.07) 60px);
+    }
+    #hero::after {
+      content: '';
+      position: absolute;
+      bottom: -120px; right: -120px;
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(184,151,42,0.12) 0%, transparent 70%);
+    }
+    .hero-inner { position: relative; z-index: 1; max-width: 820px; }
+    .hero-label {
+      font-family: var(--sans);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .hero-label::before {
+      content: '';
+      display: inline-block;
+      width: 40px; height: 1px;
+      background: var(--gold);
+    }
+    h1 {
+      font-family: var(--serif);
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      font-weight: 500;
+      color: var(--cream);
+      line-height: 1.15;
+      margin-bottom: 28px;
+    }
+    h1 em { color: var(--gold-light); font-style: italic; }
+    .hero-desc {
+      font-size: 1.1rem;
+      color: rgba(245,242,235,0.72);
+      max-width: 560px;
+      line-height: 1.8;
+      margin-bottom: 44px;
+    }
+    .hero-ctas { display: flex; gap: 16px; flex-wrap: wrap; }
+    .btn-primary {
+      display: inline-block;
+      padding: 13px 32px;
+      background: var(--gold);
+      color: var(--navy);
+      font-family: var(--sans);
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); }
+    .btn-outline {
+      display: inline-block;
+      padding: 12px 32px;
+      border: 1.5px solid rgba(184,151,42,0.5);
+      color: var(--cream-dark);
+      font-family: var(--sans);
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-outline:hover { border-color: var(--gold); color: var(--gold-light); }
+
+    /* ── SECTION COMMON ── */
+    section { padding: 100px 80px; }
+    section:nth-child(even) { background: white; }
+    .section-header { margin-bottom: 60px; }
+    .section-tag {
+      font-family: var(--sans);
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 12px;
+    }
+    .section-tag::before {
+      content: '';
+      display: inline-block;
+      width: 28px; height: 1px;
+      background: var(--gold);
+    }
+    h2 {
+      font-family: var(--serif);
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      font-weight: 500;
+      color: var(--navy);
+      line-height: 1.2;
+    }
+    .rule {
+      width: 56px; height: 2px;
+      background: var(--gold);
+      margin-top: 18px;
+    }
+
+    /* ── ABOUT ── */
+    #about .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: start;
+    }
+    #about p {
+      color: var(--text-soft);
+      margin-bottom: 16px;
+    }
+    .about-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 8px;
+    }
+    .stat-box {
+      border: 1px solid var(--cream-dark);
+      border-left: 3px solid var(--gold);
+      padding: 20px 24px;
+      background: var(--cream);
+    }
+    .stat-box .num {
+      font-family: var(--serif);
+      font-size: 2.2rem;
+      color: var(--navy);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .stat-box .label {
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    /* ── RESEARCH ── */
+    #research .research-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+    }
+    .research-card {
+      border: 1px solid var(--cream-dark);
+      padding: 36px 32px;
+      background: var(--cream);
+      transition: border-color 0.2s, transform 0.2s;
+      position: relative;
+    }
+    .research-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 3px;
+      background: var(--gold);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s;
+    }
+    .research-card:hover { border-color: var(--gold); transform: translateY(-3px); }
+    .research-card:hover::before { transform: scaleX(1); }
+    .research-icon {
+      font-size: 1.8rem;
+      margin-bottom: 18px;
+    }
+    .research-card h3 {
+      font-family: var(--serif);
+      font-size: 1.25rem;
+      color: var(--navy);
+      margin-bottom: 12px;
+    }
+    .research-card p {
+      font-size: 0.93rem;
+      color: var(--text-soft);
+      line-height: 1.7;
+    }
+
+    /* ── TEAM ── */
+    #team .team-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 32px;
+    }
+    .member-card { text-align: center; }
+    .member-avatar {
+      width: 110px; height: 110px;
+      border-radius: 50%;
+      background: var(--navy-mid);
+      margin: 0 auto 18px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--serif);
+      font-size: 1.6rem;
+      color: var(--gold);
+      border: 3px solid var(--gold);
+      position: relative;
+      overflow: hidden;
+    }
+    .member-name {
+      font-family: var(--serif);
+      font-size: 1.1rem;
+      color: var(--navy);
+      margin-bottom: 4px;
+    }
+    .member-role {
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+    .member-field {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+    }
+
+    /* ── PUBLICATIONS ── */
+    #publications .pub-list { display: flex; flex-direction: column; gap: 0; }
+    .pub-item {
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: 0 32px;
+      padding: 28px 0;
+      border-bottom: 1px solid var(--cream-dark);
+      align-items: start;
+    }
+    .pub-year {
+      font-family: var(--serif);
+      font-size: 1.35rem;
+      color: var(--gold);
+      font-weight: 500;
+      padding-top: 2px;
+    }
+    .pub-body {}
+    .pub-title {
+      font-family: var(--serif);
+      font-size: 1.08rem;
+      color: var(--navy);
+      margin-bottom: 5px;
+      line-height: 1.4;
+    }
+    .pub-authors {
+      font-size: 0.87rem;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+    .pub-journal {
+      font-size: 0.83rem;
+      font-style: italic;
+      color: var(--text-soft);
+    }
+    .pub-tag {
+      display: inline-block;
+      margin-left: 10px;
+      padding: 2px 9px;
+      background: rgba(184,151,42,0.12);
+      color: var(--gold);
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-style: normal;
+    }
+
+    /* ── CONTACT ── */
+    #contact {
+      background: var(--navy);
+    }
+    #contact .section-tag { color: var(--gold); }
+    #contact h2 { color: var(--cream); }
+    #contact .rule { background: var(--gold); }
+    #contact .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      margin-top: 48px;
+    }
+    .contact-info p {
+      color: rgba(245,242,235,0.7);
+      margin-bottom: 32px;
+      line-height: 1.8;
+    }
+    .contact-detail {
+      display: flex; align-items: flex-start; gap: 16px;
+      margin-bottom: 20px;
+    }
+    .contact-detail .icon {
+      width: 36px; height: 36px;
+      background: rgba(184,151,42,0.15);
+      border: 1px solid rgba(184,151,42,0.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.95rem;
+      flex-shrink: 0;
+    }
+    .contact-detail .text { font-size: 0.93rem; color: rgba(245,242,235,0.75); }
+    .contact-detail .text strong { display: block; font-weight: 600; color: var(--cream); margin-bottom: 2px; font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; }
+    .contact-form { display: flex; flex-direction: column; gap: 16px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .contact-form input,
+    .contact-form textarea {
+      width: 100%;
+      padding: 13px 16px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(184,151,42,0.25);
+      color: var(--cream);
+      font-family: var(--sans);
+      font-size: 0.93rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .contact-form input::placeholder,
+    .contact-form textarea::placeholder { color: rgba(245,242,235,0.35); }
+    .contact-form input:focus,
+    .contact-form textarea:focus { border-color: var(--gold); }
+    .contact-form textarea { resize: vertical; min-height: 130px; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #080f18;
+      padding: 28px 80px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid rgba(184,151,42,0.2);
+    }
+    footer p {
+      font-size: 0.8rem;
+      color: rgba(245,242,235,0.35);
+    }
+    footer a { color: var(--gold); text-decoration: none; }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .hero-label  { animation: fadeUp 0.6s ease both; }
+    h1           { animation: fadeUp 0.6s 0.1s ease both; }
+    .hero-desc   { animation: fadeUp 0.6s 0.2s ease both; }
+    .hero-ctas   { animation: fadeUp 0.6s 0.3s ease both; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 0 24px; }
+      .nav-links { gap: 18px; }
+      section { padding: 72px 32px; }
+      #hero { padding: 110px 32px 72px; }
+      footer { padding: 24px 32px; flex-direction: column; gap: 8px; text-align: center; }
+      #about .about-grid,
+      #contact .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+      #research .research-grid { grid-template-columns: 1fr 1fr; }
+      #team .team-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 600px) {
+      .nav-links { display: none; }
+      #research .research-grid { grid-template-columns: 1fr; }
+      #team .team-grid { grid-template-columns: repeat(2, 1fr); }
+      .form-row { grid-template-columns: 1fr; }
+      .pub-item { grid-template-columns: 60px 1fr; gap: 0 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="#hero">The <span>Research</span> Laboratory</a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#research">Research</a></li>
+      <li><a href="#team">Team</a></li>
+      <li><a href="#publications">Publications</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-inner">
+      <div class="hero-label">Research Laboratory · Est. 2015</div>
+      <h1>Advancing Knowledge at the <em>Frontier of Science</em></h1>
+      <p class="hero-desc">
+        We are an interdisciplinary research group dedicated to rigorous inquiry,
+        collaborative discovery, and the pursuit of solutions to humanity's most
+        pressing scientific challenges.
+      </p>
+      <div class="hero-ctas">
+        <a href="#research" class="btn-primary">Explore Our Research</a>
+        <a href="#contact" class="btn-outline">Get in Touch</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="section-header">
+      <div class="section-tag">About the Lab</div>
+      <h2>Who We Are</h2>
+      <div class="rule"></div>
+    </div>
+    <div class="about-grid">
+      <div>
+        <p>
+          Founded in 2015, our laboratory is a hub of curiosity and collaboration.
+          We bring together researchers from diverse disciplines — biology, chemistry,
+          computational science, and engineering — united by a shared commitment to
+          excellence and discovery.
+        </p>
+        <p>
+          Our approach is grounded in rigorous methodology and guided by the belief
+          that fundamental research is the engine of transformative innovation.
+          We collaborate with institutions worldwide, and our work has contributed
+          to advances in medicine, materials science, and environmental sustainability.
+        </p>
+        <p>
+          We are proud to foster an inclusive environment where early-career scientists
+          thrive alongside experienced researchers, forging the next generation of
+          scientific leaders.
+        </p>
+      </div>
+      <div class="about-stats">
+        <div class="stat-box">
+          <div class="num">12+</div>
+          <div class="label">Years Active</div>
+        </div>
+        <div class="stat-box">
+          <div class="num">38</div>
+          <div class="label">Researchers</div>
+        </div>
+        <div class="stat-box">
+          <div class="num">180+</div>
+          <div class="label">Publications</div>
+        </div>
+        <div class="stat-box">
+          <div class="num">24</div>
+          <div class="label">Active Projects</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESEARCH -->
+  <section id="research">
+    <div class="section-header">
+      <div class="section-tag">Research &amp; Projects</div>
+      <h2>Areas of Investigation</h2>
+      <div class="rule"></div>
+    </div>
+    <div class="research-grid">
+      <div class="research-card">
+        <div class="research-icon">🔬</div>
+        <h3>Molecular Biology</h3>
+        <p>Investigating cellular mechanisms and gene regulatory networks to
+        understand disease pathways and identify novel therapeutic targets.</p>
+      </div>
+      <div class="research-card">
+        <div class="research-icon">⚗️</div>
+        <h3>Materials Chemistry</h3>
+        <p>Designing and characterizing advanced materials with tailored
+        properties for energy storage, catalysis, and biomedical applications.</p>
+      </div>
+      <div class="research-card">
+        <div class="research-icon">💻</div>
+        <h3>Computational Modeling</h3>
+        <p>Developing high-fidelity simulations and machine learning models
+        to accelerate hypothesis testing and extract insight from complex datasets.</p>
+      </div>
+      <div class="research-card">
+        <div class="research-icon">🌱</div>
+        <h3>Environmental Science</h3>
+        <p>Studying ecological systems and pollutant dynamics to inform
+        evidence-based policies for environmental protection and restoration.</p>
+      </div>
+      <div class="research-card">
+        <div class="research-icon">🧬</div>
+        <h3>Genomics &amp; Bioinformatics</h3>
+        <p>Applying next-generation sequencing and computational genomics to
+        map genetic variation and its functional consequences.</p>
+      </div>
+      <div class="research-card">
+        <div class="research-icon">🤝</div>
+        <h3>Translational Research</h3>
+        <p>Bridging fundamental discoveries with clinical and industrial
+        applications through close partnerships with hospitals and industry.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- TEAM -->
+  <section id="team">
+    <div class="section-header">
+      <div class="section-tag">Team Members</div>
+      <h2>Our Researchers</h2>
+      <div class="rule"></div>
+    </div>
+    <div class="team-grid">
+      <div class="member-card">
+        <div class="member-avatar">PK</div>
+        <div class="member-name">Prof. Park Kyung-hee</div>
+        <div class="member-role">Principal Investigator</div>
+        <div class="member-field">Molecular Biology</div>
+      </div>
+      <div class="member-card">
+        <div class="member-avatar">LJ</div>
+        <div class="member-name">Dr. Lee Jun-seo</div>
+        <div class="member-role">Senior Researcher</div>
+        <div class="member-field">Materials Chemistry</div>
+      </div>
+      <div class="member-card">
+        <div class="member-avatar">CY</div>
+        <div class="member-name">Dr. Choi Yeon-ji</div>
+        <div class="member-role">Postdoctoral Fellow</div>
+        <div class="member-field">Computational Science</div>
+      </div>
+      <div class="member-card">
+        <div class="member-avatar">KM</div>
+        <div class="member-name">Kim Min-jun</div>
+        <div class="member-role">PhD Candidate</div>
+        <div class="member-field">Genomics</div>
+      </div>
+      <div class="member-card">
+        <div class="member-avatar">OH</div>
+        <div class="member-name">Oh Hana</div>
+        <div class="member-role">PhD Candidate</div>
+        <div class="member-field">Environmental Science</div>
+      </div>
+      <div class="member-card">
+        <div class="member-avatar">JS</div>
+        <div class="member-name">Jung So-yeon</div>
+        <div class="member-role">Research Associate</div>
+        <div class="member-field">Bioinformatics</div>
+      </div>
+      <div class="member-card">
+        <div class="member-avatar">BT</div>
+        <div class="member-name">Bae Tae-ho</div>
+        <div class="member-role">MSc Student</div>
+        <div class="member-field">Molecular Biology</div>
+      </div>
+      <div class="member-card">
+        <div class="member-avatar">SJ</div>
+        <div class="member-name">Shin Ji-won</div>
+        <div class="member-role">MSc Student</div>
+        <div class="member-field">Materials Chemistry</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PUBLICATIONS -->
+  <section id="publications">
+    <div class="section-header">
+      <div class="section-tag">Publications</div>
+      <h2>Selected Works</h2>
+      <div class="rule"></div>
+    </div>
+    <div class="pub-list">
+      <div class="pub-item">
+        <div class="pub-year">2025</div>
+        <div class="pub-body">
+          <div class="pub-title">Allosteric regulation of CRISPR-Cas9 by nucleosome remodeling complexes in human stem cells</div>
+          <div class="pub-authors">Park K., Lee J., Choi Y., Kim M.</div>
+          <div class="pub-journal">Nature Structural &amp; Molecular Biology <span class="pub-tag">Featured</span></div>
+        </div>
+      </div>
+      <div class="pub-item">
+        <div class="pub-year">2024</div>
+        <div class="pub-body">
+          <div class="pub-title">High-entropy alloy nanoparticles as bifunctional electrocatalysts for sustainable hydrogen production</div>
+          <div class="pub-authors">Lee J., Shin J., Park K.</div>
+          <div class="pub-journal">Advanced Materials</div>
+        </div>
+      </div>
+      <div class="pub-item">
+        <div class="pub-year">2024</div>
+        <div class="pub-body">
+          <div class="pub-title">Deep learning frameworks for predicting transcription factor binding from chromatin accessibility data</div>
+          <div class="pub-authors">Choi Y., Jung S., Bae T.</div>
+          <div class="pub-journal">Genome Research</div>
+        </div>
+      </div>
+      <div class="pub-item">
+        <div class="pub-year">2023</div>
+        <div class="pub-body">
+          <div class="pub-title">Microplastic accumulation dynamics in estuarine sediments along the South Korean coastline</div>
+          <div class="pub-authors">Oh H., Park K., Lee J.</div>
+          <div class="pub-journal">Environmental Science &amp; Technology</div>
+        </div>
+      </div>
+      <div class="pub-item">
+        <div class="pub-year">2023</div>
+        <div class="pub-body">
+          <div class="pub-title">Structural basis of RNA-guided genome editing by a type I-E CRISPR-Cascade complex</div>
+          <div class="pub-authors">Park K., Kim M., Choi Y.</div>
+          <div class="pub-journal">Cell <span class="pub-tag">Cover Article</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="section-header">
+      <div class="section-tag">Contact</div>
+      <h2>Get In Touch</h2>
+      <div class="rule"></div>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-info">
+        <p>
+          We welcome inquiries from prospective collaborators, graduate students,
+          and postdoctoral candidates. Please reach out via the form or directly
+          through the contact details below.
+        </p>
+        <div class="contact-detail">
+          <div class="icon">📍</div>
+          <div class="text">
+            <strong>Address</strong>
+            123 Science Building, University Campus<br>
+            Busan, Republic of Korea 48513
+          </div>
+        </div>
+        <div class="contact-detail">
+          <div class="icon">✉️</div>
+          <div class="text">
+            <strong>Email</strong>
+            lab@university.ac.kr
+          </div>
+        </div>
+        <div class="contact-detail">
+          <div class="icon">📞</div>
+          <div class="text">
+            <strong>Phone</strong>
+            +82 51 000 0000
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="contact-form">
+          <div class="form-row">
+            <input type="text" placeholder="Your Name" />
+            <input type="email" placeholder="Email Address" />
+          </div>
+          <input type="text" placeholder="Subject" />
+          <textarea placeholder="Your message…"></textarea>
+          <button class="btn-primary" style="border:none;cursor:pointer;align-self:flex-start;">Send Message</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2025 The Research Laboratory. All rights reserved.</p>
+    <p>Built with care · <a href="#">Back to top ↑</a></p>
+  </footer>
+
+</body>
+</html>
