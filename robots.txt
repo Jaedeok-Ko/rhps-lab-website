@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://rhps-lab.vercel.app/sitemap.xml
+Sitemap: https://rhps-lab-kmou.vercel.app/sitemap.xml
