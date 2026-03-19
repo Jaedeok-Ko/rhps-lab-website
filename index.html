@@ -223,7 +223,7 @@
     </div>
     <div class="hero-right">
       <div class="hero-stat dark">
-        <div class="num">20+</div>
+        <div class="num" id="stat-journal-hero">20+</div>
         <div class="lbl">Journal Papers</div>
       </div>
       <div class="hero-stat">
@@ -231,7 +231,7 @@
         <div class="lbl">Research Projects</div>
       </div>
       <div class="hero-stat">
-        <div class="num">14</div>
+        <div class="num" id="stat-conf-hero">14</div>
         <div class="lbl">Conference Papers</div>
       </div>
       <div class="hero-feature">
@@ -251,8 +251,8 @@
         <p>We collaborate closely with industry partners such as LG Electronics and national research programs funded by the National Research Foundation of Korea, bridging fundamental science and real-world thermal engineering challenges.</p>
       </div>
       <div class="about-stats">
-        <div class="stat-box"><div class="num">20+</div><div class="label">Journal Papers</div></div>
-        <div class="stat-box"><div class="num">14</div><div class="label">Conference Papers</div></div>
+        <div class="stat-box"><div class="num" id="stat-journal-about">20+</div><div class="label">Journal Papers</div></div>
+        <div class="stat-box"><div class="num" id="stat-conf-about">14</div><div class="label">Conference Papers</div></div>
         <div class="stat-box"><div class="num">13</div><div class="label">Research Projects</div></div>
         <div class="stat-box"><div class="num">3+</div><div class="label">Industry Partners</div></div>
       </div>
@@ -337,8 +337,7 @@
   <section id="publications">
     <div class="section-label">Publications</div>
     <h2>Peer-Reviewed Journal Articles</h2>
-    <div class="pub-list">
-      <div class="pub-item"><div class="pub-year">2026</div><div><div class="pub-title"><a href="https://doi.org/10.1016/j.csite.2025.107549" target="_blank">Energy-saving potential of an R600a household refrigerator through mixing with R290 and changing compressor revolution speed</a></div><div class="pub-authors">Kazmi, A., Ko, J., &amp; Jeong, J.H.</div><div class="pub-journal">Case Studies in Thermal Engineering, Vol. 77, 107549</div></div></div>
+    <div class="pub-list" id="journal-list"> target="_blank">Energy-saving potential of an R600a household refrigerator through mixing with R290 and changing compressor revolution speed</a></div><div class="pub-authors">Kazmi, A., Ko, J., &amp; Jeong, J.H.</div><div class="pub-journal">Case Studies in Thermal Engineering, Vol. 77, 107549</div></div></div>
       <div class="pub-item"><div class="pub-year">2026</div><div><div class="pub-title"><a href="https://doi.org/10.1016/j.applthermaleng.2025.128912" target="_blank">Development and evaluation of a dual-loop vapor compression refrigerator-freezer for improved energy efficiency</a></div><div class="pub-authors">Lee, K.H., Jeong, J.H., &amp; Ko, J.</div><div class="pub-journal">Applied Thermal Engineering, Vol. 282, 128912</div></div></div>
       <div class="pub-item"><div class="pub-year">2025</div><div><div class="pub-title"><a href="https://doi.org/10.1016/j.applthermaleng.2025.126657" target="_blank">Experimental investigation of the performance of a household refrigerator-freezer operating with various R600a/R290 mixing ratios</a></div><div class="pub-authors">Kazmi, A., Ko, J., &amp; Jeong, J.H.</div><div class="pub-journal">Applied Thermal Engineering, Vol. 274, 126657</div></div></div>
       <div class="pub-item"><div class="pub-year">2025</div><div><div class="pub-title"><a href="https://doi.org/10.1080/07373937.2024.2432898" target="_blank">A novel mass transfer effectiveness model incorporating water activity for moisture evaporation rate prediction from fabric clothes</a></div><div class="pub-authors">Jeong, D., Ko, J., Sung, I., Miyazaki, T., Thu, K., &amp; Jeong, J.H.</div><div class="pub-journal">Drying Technology, Vol. 43(3), pp. 492–509</div></div></div>
@@ -362,7 +361,7 @@
 
     <div class="pub-sub">Conference Proceedings</div>
     <div class="pub-sub-rule"></div>
-    <div class="pub-list">
+    <div class="pub-list" id="conference-list">
       <div class="pub-item"><div class="pub-year">2025</div><div><div class="pub-title">Comparison of two-phase flow distribution according to the installation orientation of an annular distribution header</div><div class="pub-authors">Ko, J., &amp; Jeong, J.H.</div><div class="pub-journal">The 12th International Conference on Multiphase Flow (ICMF 2025), Toulouse, France, May 12–16, 2025</div></div></div>
       <div class="pub-item"><div class="pub-year">2025</div><div><div class="pub-title">Evaluation of thermal resistance based on materials and joining methods of capillary tube-suction line heat exchangers</div><div class="pub-authors">Park, J., Ko, J., Sung, I., Lee, H., &amp; Jeong, J.H.</div><div class="pub-journal">2025 KSME Thermal Engineering Division Annual Conference, Jeju, Republic of Korea, Apr. 23–26, 2025</div></div></div>
       <div class="pub-item"><div class="pub-year">2024</div><div><div class="pub-title">Effect of the suction pipe material in a capillary tube-suction line heat exchanger on a refrigeration system performance</div><div class="pub-authors">Ko, J., Jeon, S., Sung, I., Lee, H., Park, J., &amp; Jeong, J.H.</div><div class="pub-journal">The 3rd Pacific Rim Thermal Engineering Conference (PRTEC 2024), Honolulu, Hawaii, US, Dec. 15–19, 2024</div></div></div>
@@ -445,6 +444,25 @@
     </div>
     <p><a href="#">Back to top ↑</a></p>
   </footer>
+  <script>
+    // Auto-count publications and update all stat displays
+    function updatePubCounts() {
+      const journalCount  = document.querySelectorAll('#journal-list .pub-item').length;
+      const confCount     = document.querySelectorAll('#conference-list .pub-item').length;
+
+      ['stat-journal-hero', 'stat-journal-about'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = journalCount;
+      });
+
+      ['stat-conf-hero', 'stat-conf-about'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = confCount;
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', updatePubCounts);
+  </script>
 
 </body>
 </html>
