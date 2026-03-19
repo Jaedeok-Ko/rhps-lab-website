@@ -138,6 +138,7 @@
     .pub-title a { color: var(--text); text-decoration: none; border-bottom: 1px solid transparent; transition: color 0.2s, border-color 0.2s; }
     .pub-title a:hover { color: var(--accent); border-bottom-color: var(--accent); }
     .pub-authors { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 3px; font-weight: 300; }
+    .pub-authors .highlight-author { font-weight: 600; color: var(--text); }
     .pub-journal { font-size: 0.81rem; font-style: italic; color: var(--text-soft); }
     .pub-tag { display:inline-block; margin-left:8px; padding:2px 7px; background: var(--accent-light); color: var(--accent); font-size:0.65rem; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; font-style:normal; border-radius: 2px; }
 
@@ -469,6 +470,13 @@
     }
 
     document.addEventListener('DOMContentLoaded', updatePubCounts);
+
+    // Highlight "Ko, J." in all author lines
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.pub-authors').forEach(el => {
+        el.innerHTML = el.innerHTML.replace(/Ko, J\./g, '<span class="highlight-author">Ko, J.</span>');
+      });
+    });
   </script>
 
 </body>
