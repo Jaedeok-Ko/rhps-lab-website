@@ -540,96 +540,7 @@
     </div>
   </section>
 
-  <footer>
-    <div style="display:flex;align-items:center;gap:14px;">
-      <img src="kmou-emblem.png" alt="Korea Maritime & Ocean University" style="height:36px;width:auto;opacity:0.18;filter:brightness(0) invert(1);transition:opacity 0.2s;" onmouseover="this.style.opacity='0.55'" onmouseout="this.style.opacity='0.18'">
-      <div>
-        <p style="margin-bottom:2px;">© 2026 RHPS Lab · Korea Maritime &amp; Ocean University · All rights reserved.</p>
-        <p>Division of Mechanical Engineering · 727 Taejong-ro, Yeongdo-gu, Busan 49112, Republic of Korea</p>
-      </div>
-    </div>
-    <p><a href="#">Back to top ↑</a></p>
-  </footer>
-  <script>
-  async function sendContactMessage() {
-    const firstName = document.getElementById('cf-firstName').value.trim();
-    const lastName  = document.getElementById('cf-lastName').value.trim();
-    const email     = document.getElementById('cf-email').value.trim();
-    const type      = document.getElementById('cf-type').value;
-    const message   = document.getElementById('cf-message').value.trim();
-    const btn       = document.getElementById('cf-btn');
-    const spinner   = document.getElementById('cf-spinner');
-    const btnText   = document.getElementById('cf-btntext');
-    const status    = document.getElementById('cf-status');
-
-    status.style.display = 'none';
-    if (!firstName || !lastName || !email || !message) {
-      status.style.display = 'block';
-      status.style.color = '#ff6b6b';
-      status.textContent = 'Please fill in all required fields.';
-      return;
-    }
-
-    btn.disabled = true;
-    spinner.style.display = 'inline-block';
-    btnText.textContent = 'Sending…';
-
-    try {
-      const formData = new FormData();
-      formData.append('access_key', 'e16ae078-55eb-460f-9ed6-8f66eecb7d35');
-      formData.append('name', `${firstName} ${lastName}`);
-      formData.append('email', email);
-      formData.append('subject', `[RHPS Lab Contact] ${type} from ${firstName} ${lastName}`);
-      formData.append('message', `Inquiry Type: ${type}\n\n${message}`);
-
-      const res = await fetch('https://api.web3forms.com/submit', {
-        method: 'POST',
-        body: formData
-      });
-
-      const data = await res.json();
-      if (!data.success) throw new Error(data.message || 'Send failed');
-
-      status.style.display = 'block';
-      status.style.color = '#4ade80';
-      status.textContent = '✓ Message sent! We\'ll be in touch soon.';
-      document.getElementById('cf-firstName').value = '';
-      document.getElementById('cf-lastName').value = '';
-      document.getElementById('cf-email').value = '';
-      document.getElementById('cf-message').value = '';
-
-    } catch(e) {
-      status.style.display = 'block';
-      status.style.color = '#ff6b6b';
-      status.textContent = `✗ ${e.message || 'Something went wrong. Please try again.'}`;
-    } finally {
-      btn.disabled = false;
-      spinner.style.display = 'none';
-      btnText.textContent = 'Send Message';
-    }
-  }
-  </script>
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-    // Auto-count publications and update all stat displays
-    function updatePubCounts() {
-      const journalCount  = document.querySelectorAll('#journal-list .pub-item').length;
-      const confCount     = document.querySelectorAll('#conference-list .pub-item').length;
-
-      ['stat-journal-hero', 'stat-journal-about'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.textContent = journalCount;
-      });
-
-      ['stat-conf-hero', 'stat-conf-about'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.textContent = confCount;
-      });
-    }
-
-    document.addEventListener('DOMContentLoaded', updatePubCounts);
-  </script>
-
-  <!-- ── Visitor Map Section ── -->
+<!-- ── Visitor Map Section ── -->
   <style>
     #visitors {
       background: #0a0a0a;
@@ -882,6 +793,95 @@
       pills.innerHTML = '<span style="font-size:0.8rem;color:rgba(255,255,255,0.25);">Visitor countries will appear here</span>';
     }
   })();
+  </script>
+
+    <footer>
+    <div style="display:flex;align-items:center;gap:14px;">
+      <img src="kmou-emblem.png" alt="Korea Maritime & Ocean University" style="height:36px;width:auto;opacity:0.18;filter:brightness(0) invert(1);transition:opacity 0.2s;" onmouseover="this.style.opacity='0.55'" onmouseout="this.style.opacity='0.18'">
+      <div>
+        <p style="margin-bottom:2px;">© 2026 RHPS Lab · Korea Maritime &amp; Ocean University · All rights reserved.</p>
+        <p>Division of Mechanical Engineering · 727 Taejong-ro, Yeongdo-gu, Busan 49112, Republic of Korea</p>
+      </div>
+    </div>
+    <p><a href="#">Back to top ↑</a></p>
+  </footer>
+  <script>
+  async function sendContactMessage() {
+    const firstName = document.getElementById('cf-firstName').value.trim();
+    const lastName  = document.getElementById('cf-lastName').value.trim();
+    const email     = document.getElementById('cf-email').value.trim();
+    const type      = document.getElementById('cf-type').value;
+    const message   = document.getElementById('cf-message').value.trim();
+    const btn       = document.getElementById('cf-btn');
+    const spinner   = document.getElementById('cf-spinner');
+    const btnText   = document.getElementById('cf-btntext');
+    const status    = document.getElementById('cf-status');
+
+    status.style.display = 'none';
+    if (!firstName || !lastName || !email || !message) {
+      status.style.display = 'block';
+      status.style.color = '#ff6b6b';
+      status.textContent = 'Please fill in all required fields.';
+      return;
+    }
+
+    btn.disabled = true;
+    spinner.style.display = 'inline-block';
+    btnText.textContent = 'Sending…';
+
+    try {
+      const formData = new FormData();
+      formData.append('access_key', 'e16ae078-55eb-460f-9ed6-8f66eecb7d35');
+      formData.append('name', `${firstName} ${lastName}`);
+      formData.append('email', email);
+      formData.append('subject', `[RHPS Lab Contact] ${type} from ${firstName} ${lastName}`);
+      formData.append('message', `Inquiry Type: ${type}\n\n${message}`);
+
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        body: formData
+      });
+
+      const data = await res.json();
+      if (!data.success) throw new Error(data.message || 'Send failed');
+
+      status.style.display = 'block';
+      status.style.color = '#4ade80';
+      status.textContent = '✓ Message sent! We\'ll be in touch soon.';
+      document.getElementById('cf-firstName').value = '';
+      document.getElementById('cf-lastName').value = '';
+      document.getElementById('cf-email').value = '';
+      document.getElementById('cf-message').value = '';
+
+    } catch(e) {
+      status.style.display = 'block';
+      status.style.color = '#ff6b6b';
+      status.textContent = `✗ ${e.message || 'Something went wrong. Please try again.'}`;
+    } finally {
+      btn.disabled = false;
+      spinner.style.display = 'none';
+      btnText.textContent = 'Send Message';
+    }
+  }
+  </script>
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    // Auto-count publications and update all stat displays
+    function updatePubCounts() {
+      const journalCount  = document.querySelectorAll('#journal-list .pub-item').length;
+      const confCount     = document.querySelectorAll('#conference-list .pub-item').length;
+
+      ['stat-journal-hero', 'stat-journal-about'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = journalCount;
+      });
+
+      ['stat-conf-hero', 'stat-conf-about'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = confCount;
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', updatePubCounts);
   </script>
 
 </body>
