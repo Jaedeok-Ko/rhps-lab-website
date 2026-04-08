@@ -277,6 +277,7 @@
       <li><a href="#publications">Publications</a></li>
       <li><a href="#projects">Projects</a></li>
       <li><a href="#contact">Contact</a></li>
+      <li><a href="#visitors">Visitors</a></li>
     </ul>
   </nav>
 
@@ -626,4 +627,262 @@
     }
 
     document.addEventListener('DOMContentLoaded', updatePubCounts);
+  </script>
 
+  <!-- ── Visitor Map Section ── -->
+  <style>
+    #visitors {
+      background: #0a0a0a;
+      padding: 64px 56px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    #visitors .section-label { color: #6fa0f7; }
+    #visitors .section-label::before { background: #6fa0f7; }
+    #visitors h2 { color: #fff; margin-bottom: 32px; font-size: 1.8rem; }
+    .visitor-stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 36px;
+    }
+    .v-stat {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 4px;
+      padding: 20px 24px;
+    }
+    .v-stat .v-num {
+      font-family: var(--sans);
+      font-size: 2rem;
+      font-weight: 600;
+      color: #fff;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .v-stat .v-lbl {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+    }
+    #visitor-map-wrap {
+      width: 100%;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 4px;
+      overflow: hidden;
+      position: relative;
+    }
+    #visitor-map-wrap svg { display: block; width: 100%; }
+    #map-tooltip {
+      position: absolute;
+      background: rgba(15,15,15,0.92);
+      border: 1px solid rgba(111,160,247,0.4);
+      color: #fff;
+      font-family: var(--sans);
+      font-size: 0.78rem;
+      padding: 6px 12px;
+      border-radius: 3px;
+      pointer-events: none;
+      display: none;
+      white-space: nowrap;
+      z-index: 10;
+    }
+    .visitor-country-list {
+      margin-top: 24px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .visitor-country-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.65);
+    }
+    .visitor-country-pill .pill-flag { font-size: 14px; }
+    .visitor-country-pill .pill-count {
+      background: rgba(111,160,247,0.2);
+      color: #6fa0f7;
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 1px 6px;
+      border-radius: 10px;
+    }
+    @media (max-width: 900px) {
+      #visitors { padding: 56px 24px; }
+      .visitor-stats-row { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 600px) {
+      .visitor-stats-row { grid-template-columns: 1fr; }
+    }
+  </style>
+
+  <section id="visitors">
+    <div class="section-label">Analytics</div>
+    <h2>Visitors Around the World</h2>
+    <div class="visitor-stats-row">
+      <div class="v-stat">
+        <div class="v-num" id="vm-total">—</div>
+        <div class="v-lbl">Total Visits</div>
+      </div>
+      <div class="v-stat">
+        <div class="v-num" id="vm-today">—</div>
+        <div class="v-lbl">Today</div>
+      </div>
+      <div class="v-stat">
+        <div class="v-num" id="vm-countries">—</div>
+        <div class="v-lbl">Countries</div>
+      </div>
+    </div>
+    <div id="visitor-map-wrap">
+      <div id="map-tooltip"></div>
+      <svg id="visitor-map" viewBox="0 0 960 500" preserveAspectRatio="xMidYMid meet"></svg>
+    </div>
+    <div class="visitor-country-list" id="country-pills"></div>
+  </section>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
+  <script>
+  (async function initVisitorMap() {
+    const NS = 'rhps-lab-kmou-v2';
+    const todayKey = 'visits-' + new Date().toISOString().slice(0, 10);
+
+    function countryFlag(code) {
+      if (!code || code.length !== 2) return '';
+      return code.toUpperCase().replace(/./g, c => String.fromCodePoint(127397 + c.charCodeAt(0)));
+    }
+
+    // ISO alpha-2 to numeric (subset for common countries + lookup)
+    const alpha2ToNumeric = {"AF":"4","AL":"8","DZ":"12","AD":"20","AO":"24","AG":"28","AR":"32","AM":"51","AU":"36","AT":"40","AZ":"31","BS":"44","BH":"48","BD":"50","BB":"52","BY":"112","BE":"56","BZ":"84","BJ":"204","BT":"64","BO":"68","BA":"70","BW":"72","BR":"76","BN":"96","BG":"100","BF":"854","BI":"108","CV":"132","KH":"116","CM":"120","CA":"124","CF":"140","TD":"148","CL":"152","CN":"156","CO":"170","KM":"174","CG":"178","CR":"188","HR":"191","CU":"192","CY":"196","CZ":"203","DK":"208","DJ":"262","DM":"212","DO":"214","EC":"218","EG":"818","SV":"222","GQ":"226","ER":"232","EE":"233","SZ":"748","ET":"231","FJ":"242","FI":"246","FR":"250","GA":"266","GM":"270","GE":"268","DE":"276","GH":"288","GR":"300","GD":"308","GT":"320","GN":"324","GW":"624","GY":"328","HT":"332","HN":"340","HU":"348","IS":"352","IN":"356","ID":"360","IR":"364","IQ":"368","IE":"372","IL":"376","IT":"380","JM":"388","JP":"392","JO":"400","KZ":"398","KE":"404","KI":"296","KW":"414","KG":"417","LA":"418","LV":"428","LB":"422","LS":"426","LR":"430","LY":"434","LI":"438","LT":"440","LU":"442","MG":"450","MW":"454","MY":"458","MV":"462","ML":"466","MT":"470","MH":"584","MR":"478","MU":"480","MX":"484","FM":"583","MD":"498","MC":"492","MN":"496","ME":"499","MA":"504","MZ":"508","MM":"104","NA":"516","NR":"520","NP":"524","NL":"528","NZ":"554","NI":"558","NE":"562","NG":"566","NO":"578","OM":"512","PK":"586","PW":"585","PA":"591","PG":"598","PY":"600","PE":"604","PH":"608","PL":"616","PT":"620","QA":"634","RO":"642","RU":"643","RW":"646","KN":"659","LC":"662","VC":"670","WS":"882","SM":"674","ST":"678","SA":"682","SN":"686","RS":"688","SC":"690","SL":"694","SG":"702","SK":"703","SI":"705","SB":"090","SO":"706","ZA":"710","SS":"728","ES":"724","LK":"144","SD":"729","SR":"740","SE":"752","CH":"756","SY":"760","TW":"158","TJ":"762","TZ":"834","TH":"764","TL":"626","TG":"768","TO":"776","TT":"780","TN":"788","TR":"792","TM":"795","TV":"798","UG":"800","UA":"804","AE":"784","GB":"826","US":"840","UY":"858","UZ":"860","VU":"548","VE":"862","VN":"704","YE":"887","ZM":"894","ZW":"716","KR":"410","KP":"408","MK":"807","XK":"383","PS":"275","TF":"260","EH":"732"};
+
+    // Load stored visitor data from localStorage
+    let visitorData = {};
+    try {
+      visitorData = JSON.parse(localStorage.getItem('rhps_visitors') || '{}');
+    } catch(e) {}
+
+    // Detect current visitor's country
+    let myCountryCode = null, myCountryName = null;
+    try {
+      const geo = await fetch('https://ipapi.co/json/');
+      const geoData = await geo.json();
+      if (geoData.country_code) {
+        myCountryCode = geoData.country_code;
+        myCountryName = geoData.country_name;
+        visitorData[myCountryCode] = (visitorData[myCountryCode] || 0) + 1;
+        localStorage.setItem('rhps_visitors', JSON.stringify(visitorData));
+      }
+    } catch(e) {}
+
+    // Fetch visit counts
+    try {
+      const [totalRes, todayRes] = await Promise.all([
+        fetch(`https://api.countapi.xyz/hit/${NS}/total`),
+        fetch(`https://api.countapi.xyz/hit/${NS}/${todayKey}`)
+      ]);
+      const totalData = await totalRes.json();
+      const todayData = await todayRes.json();
+      document.getElementById('vm-total').textContent = (totalData.value || 0).toLocaleString();
+      document.getElementById('vm-today').textContent = (todayData.value || 0).toLocaleString();
+    } catch(e) {
+      document.getElementById('vm-total').textContent = '—';
+      document.getElementById('vm-today').textContent = '—';
+    }
+
+    // Count unique countries
+    const countryCount = Object.keys(visitorData).length;
+    document.getElementById('vm-countries').textContent = countryCount || '—';
+
+    // Build map
+    const svg = d3.select('#visitor-map');
+    const width = 960, height = 500;
+    const projection = d3.geoNaturalEarth1().scale(153).translate([width / 2, height / 2]);
+    const path = d3.geoPath(projection);
+    const tooltip = document.getElementById('map-tooltip');
+    const wrap = document.getElementById('visitor-map-wrap');
+
+    try {
+      const world = await d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json');
+      const countries = topojson.feature(world, world.objects.countries);
+
+      // Build numeric→alpha2 reverse lookup
+      const numericToAlpha2 = {};
+      for (const [a2, num] of Object.entries(alpha2ToNumeric)) {
+        numericToAlpha2[num] = a2;
+      }
+
+      svg.selectAll('path.country')
+        .data(countries.features)
+        .join('path')
+        .attr('class', 'country')
+        .attr('d', path)
+        .attr('fill', d => {
+          const a2 = numericToAlpha2[String(d.id)];
+          if (a2 && a2 === myCountryCode) return '#6fa0f7';
+          if (a2 && visitorData[a2]) return '#3a6bbf';
+          return 'rgba(255,255,255,0.08)';
+        })
+        .attr('stroke', 'rgba(255,255,255,0.12)')
+        .attr('stroke-width', '0.5')
+        .on('mousemove', function(event, d) {
+          const a2 = numericToAlpha2[String(d.id)];
+          const name = d.properties?.name || 'Unknown';
+          const visits = a2 && visitorData[a2] ? visitorData[a2] : 0;
+          if (visits > 0) {
+            const rect = wrap.getBoundingClientRect();
+            tooltip.style.display = 'block';
+            tooltip.style.left = (event.clientX - rect.left + 10) + 'px';
+            tooltip.style.top = (event.clientY - rect.top - 30) + 'px';
+            tooltip.textContent = `${countryFlag(a2)} ${name} · ${visits} visit${visits > 1 ? 's' : ''}`;
+          }
+        })
+        .on('mouseleave', () => { tooltip.style.display = 'none'; });
+
+      // Graticule
+      svg.insert('path', ':first-child')
+        .datum(d3.geoGraticule()())
+        .attr('d', path)
+        .attr('fill', 'none')
+        .attr('stroke', 'rgba(255,255,255,0.04)')
+        .attr('stroke-width', '0.5');
+
+      // Globe outline
+      svg.insert('path', ':first-child')
+        .datum({type: 'Sphere'})
+        .attr('d', path)
+        .attr('fill', 'rgba(26,86,219,0.06)')
+        .attr('stroke', 'rgba(255,255,255,0.08)')
+        .attr('stroke-width', '0.5');
+
+    } catch(e) {
+      svg.append('text').attr('x', 480).attr('y', 250)
+        .attr('text-anchor', 'middle').attr('fill', 'rgba(255,255,255,0.3)')
+        .attr('font-size', '14').text('Map unavailable');
+    }
+
+    // Country pills
+    const pills = document.getElementById('country-pills');
+    const sorted = Object.entries(visitorData).sort((a, b) => b[1] - a[1]);
+    sorted.forEach(([code, count]) => {
+      const pill = document.createElement('div');
+      pill.className = 'visitor-country-pill';
+      pill.innerHTML = `<span class="pill-flag">${countryFlag(code)}</span><span>${code}</span><span class="pill-count">${count}</span>`;
+      pills.appendChild(pill);
+    });
+    if (sorted.length === 0) {
+      pills.innerHTML = '<span style="font-size:0.8rem;color:rgba(255,255,255,0.25);">Visitor countries will appear here</span>';
+    }
+  })();
+  </script>
+
+</body>
+</html>
